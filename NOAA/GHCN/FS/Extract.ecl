@@ -10,7 +10,11 @@ EXPORT Extract := MODULE
 	
 	EXPORT stations() := FUNCTION
 		File_In := BaseDataDirectory + 'ghcnd-stations.txt';
-		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_station_layout,THOR,UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		// With this approach, any lines of more than X characters as defined in the layout will break the query
+		//DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_station_layout,THOR,UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		// The solution is to use PIPE to "clean" the file, by either creating a new file or doing it on the fly like here:
+		Cmd_Line := 'bash -c "cat ' + File_In + ' | cut -c 1-85"';
+		DS_In := PIPE( Cmd_Line, Layouts.raw_station_layout);
 		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
 		RETURN OUTPUT(DS_Dist,, Datasets.File_Raw_Stations, OVERWRITE);
 	END;
