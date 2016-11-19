@@ -2,7 +2,7 @@
 
 	EXPORT summary_layout := RECORD
 		//1	dsysrtky	dsysrtky	DESY SORT KEY
-		STRING dsysrtky;
+		STRING desy_sort_key;
 		//2	state_cd	state_cd	STATE CODE
 		STRING state_cd;
 		//3	cnty_cd	cnty_cd	COUNTY CODE

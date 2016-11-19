@@ -9,131 +9,7 @@
 	// 4. Paste result here
 	// 5. Repeat for every layout
 	
-	EXPORT base_layout := RECORD
-		//1	dsysrtky	desy_sort_key	LDS Beneficiary ID	NUM	9
-		STRING desy_sort_key;
-		//2	claimno	claim_no	Claim number	NUM	12
-		STRING claim_no;
-		//3	provider	prvdr_num	Provider Number	CHAR	10
-		STRING prvdr_num;
-		//4	thru_dt	clm_thru_dt	Claim Through Date (Determines Year of Claim)	DATE	8
-		STRING clm_thru_dt;
-		//5	ric_cd	nch_near_line_rec_ident_cd	NCH Near Line Record Identification Code	CHAR	1
-		STRING nch_near_line_rec_ident_cd;
-		//6	clm_type	nch_clm_type_cd	NCH Claim Type Code	CHAR	2
-		STRING nch_clm_type_cd;
-		//7	query_cd	claim_query_code	Claim Query Code	CHAR	1
-		STRING claim_query_code;
-		//8	fac_type	clm_fac_type_cd	Claim Facility Type Code	CHAR	1
-		STRING clm_fac_type_cd;
-		//9	typesrvc	clm_srvc_clsfctn_type_cd	Claim Service classification Type Code	CHAR	1
-		STRING clm_srvc_clsfctn_type_cd;
-		//10	freq_cd	clm_freq_cd	Claim Frequency Code	CHAR	1
-		STRING clm_freq_cd;
-		//11	fi_num	fi_num	FI Number	CHAR	5
-		STRING fi_num;
-		//12	nopay_cd	clm_mdcr_non_pmt_rsn_cd	Claim Medicare Non Payment Reason Code	CHAR	2
-		STRING clm_mdcr_non_pmt_rsn_cd;
-		//13	pmt_amt	clm_pmt_amt	Claim Payment Amount	NUM	12
-		STRING clm_pmt_amt;
-		//14	prpayamt	nch_prmry_pyr_clm_pd_amt	NCH Primary Payer Claim Paid Amount	NUM	12
-		STRING nch_prmry_pyr_clm_pd_amt;
-		//15	prpay_cd	nch_prmry_pyr_cd	NCH Primary Payer Code	CHAR	1
-		STRING nch_prmry_pyr_cd;
-		//16	actioncd	fi_clm_actn_cd	FI Claim Action Code	CHAR	1
-		STRING fi_clm_actn_cd;
-		//17	prstate	prvdr_state_cd	NCH Provider State Code	CHAR	2
-		STRING prvdr_state_cd;
-		//18	orgnpinm	org_npi_num	Organization NPI Number	CHAR	10
-		STRING org_npi_num;
-		//19	at_upin	at_physn_upin	Claim Attending Physician UPIN Number	CHAR	12
-		STRING at_physn_upin;
-		//20	at_npi	at_physn_npi	Claim Attending Physician NPI Number	CHAR	12
-		STRING at_physn_npi;
-		//21	op_upin	op_physn_upin	Claim Operating Physician UPIN Number	CHAR	12
-		STRING op_physn_upin;
-		//22	op_npi	op_physn_npi	Claim Operating Physician NPI Number	CHAR	12
-		STRING op_physn_npi;
-		//23	ot_upin	ot_physn_upin	Claim Other Physician UPIN Number	CHAR	12
-		STRING ot_physn_upin;
-		//24	ot_npi	ot_physn_npi	Claim Other Physician NPI Number	CHAR	12
-		STRING ot_physn_npi;
-		//25	mcopdsw	clm_mco_pd_sw	Claim MCO Paid Switch	CHAR	1
-		STRING clm_mco_pd_sw;
-		//26	stus_cd	ptnt_dschrg_stus_cd	Patient Discharge Status Code	CHAR	2
-		STRING ptnt_dschrg_stus_cd;
-		//27	pps_ind	clm_pps_ind_cd	Claim PPS Indicator Code	CHAR	1
-		STRING clm_pps_ind_cd;
-		//28	tot_chrg	clm_tot_chrg_amt	Claim Total Charge Amount	NUM	12
-		STRING clm_tot_chrg_amt;
-		//29	admsn_dt	clm_admsn_dt	Claim Admission Date	DATE	8
-		STRING clm_admsn_dt;
-		//30	type_adm	clm_ip_admsn_type_cd	Claim Inpatient Admission Type Code	CHAR	1
-		STRING clm_ip_admsn_type_cd;
-		//31	src_adms	clm_src_ip_admsn_cd	Claim Source Inpatient Admission Code	CHAR	1
-		STRING clm_src_ip_admsn_cd;
-		//32	ptntstus	nch_ptnt_status_ind_cd	NCH Patient Status Indicator Code	CHAR	1
-		STRING nch_ptnt_status_ind_cd;
-		//33	per_diem	clm_pass_thru_per_diem_amt	Claim Pass Thru Per Diem Amount	NUM	12
-		STRING clm_pass_thru_per_diem_amt;
-		//34	ded_amt	nch_bene_ip_ddctbl_amt	NCH Beneficiary Inpatient Deductible Amount	NUM	12
-		STRING nch_bene_ip_ddctbl_amt;
-		//35	coin_amt	nch_bene_pta_coinsrnc_lblty_am	NCH Beneficiary Part A Coinsurance Liability Amount	NUM	12
-		STRING nch_bene_pta_coinsrnc_lblty_am;
-		//36	blddedam	nch_bene_blood_ddctbl_lblty_am	NCH Beneficiary Blood Deductible Liability Amount	NUM	12
-		STRING nch_bene_blood_ddctbl_lblty_am;
-		//37	pcchgamt	nch_profnl_cmpnt_chrg_amt	NCH Professional Component Charge Amount	NUM	12
-		STRING nch_profnl_cmpnt_chrg_amt;
-		//38	ncchgamt	nch_ip_ncvrd_chrg_amt	NCH Inpatient Noncovered Charge Amount	NUM	12
-		STRING nch_ip_ncvrd_chrg_amt;
-		//39	pps_cptl	clm_tot_pps_cptl_amt	Claim Total PPS Capital Amount	NUM	12
-		STRING clm_tot_pps_cptl_amt;
-		//40	cptl_fsp	clm_pps_cptl_fsp_amt	Claim PPS Capital FSP Amount	NUM	12
-		STRING clm_pps_cptl_fsp_amt;
-		//41	cptloutl	clm_pps_cptl_outlier_amt	Claim PPS Capital Outlier Amount	NUM	12
-		STRING clm_pps_cptl_outlier_amt;
-		//42	disp_shr	clm_pps_cptl_dsprprtnt_shr_amt	Claim PPS Capital Disproportionate Share Amount	NUM	12
-		STRING clm_pps_cptl_dsprprtnt_shr_amt;
-		//43	ime_amt	clm_pps_cptl_ime_amt	Claim PPS Capital IME Amount	NUM	12
-		STRING clm_pps_cptl_ime_amt;
-		//44	cptl_exp	clm_pps_cptl_excptn_amt	Claim PPS Capital Exception Amount	NUM	12
-		STRING clm_pps_cptl_excptn_amt;
-		//45	hldhrmls	clm_pps_old_cptl_hld_hrmls_amt	Claim PPS Old Capital Hold Harmless Amount	NUM	12
-		STRING clm_pps_old_cptl_hld_hrmls_amt;
-		//46	drgwtamt	clm_pps_cptl_drg_wt_num	Claim PPS Capital DRG Weight Number	NUM	8
-		STRING clm_pps_cptl_drg_wt_num;
-		//47	util_day	clm_utlztn_day_cnt	Claim Utilization Day Count	NUM	3
-		STRING clm_utlztn_day_cnt;
-		//48	coin_day	bene_tot_coinsrnc_days_cnt	Beneficiary Total Coinsurance Days Count	NUM	3
-		STRING bene_tot_coinsrnc_days_cnt;
-		//49	lrd_use	bene_lrd_used_cnt	Beneficiary LRD Used Count	NUM	3
-		STRING bene_lrd_used_cnt;
-		//50	nutilday	clm_non_utlztn_days_cnt	Claim Non Utilization Days Count	NUM	5
-		STRING clm_non_utlztn_days_cnt;
-		//51	bldfrnsh	nch_blood_pnts_frnshd_qty	NCH Blood Pints Furnished Quantity	NUM	3
-		STRING nch_blood_pnts_frnshd_qty;
-		//52	ncovfrom	nch_vrfd_ncvrd_stay_from_dt	NCH Verified Noncovered Stay From Date	DATE	8
-		STRING nch_vrfd_ncvrd_stay_from_dt;
-		//53	ncovthru	nch_vrfd_ncvrd_stay_thru_dt	NCH Verified Noncovered Stay Through Date	DATE	8
-		STRING nch_vrfd_ncvrd_stay_thru_dt;
-		//54	exhst_dt	nch_bene_mdcr_bnfts_exhtd_dt_i	NCH Beneficiary Medicare Benefits Exhausted Date	DATE	8
-		STRING nch_bene_mdcr_bnfts_exhtd_dt_i;
-		//55	dschrgdt	nch_bene_dschrg_dt	NCH Beneficiary Discharge Date	DATE	8
-		STRING nch_bene_dschrg_dt;
-		//56	drg_cd	clm_drg_cd	Claim Diagnosis Related Group Code	CHAR	3
-		STRING clm_drg_cd;
-		//57	outlr_cd	clm_drg_outlier_stay_cd	Claim Diagnosis Related Group Outlier Stay Code	CHAR	1
-		STRING clm_drg_outlier_stay_cd;
-		//58	outlrpmt	nch_drg_outlier_aprvd_pmt_amt	NCH DRG Outlier Approved Payment Amount	NUM	12
-		STRING nch_drg_outlier_aprvd_pmt_amt;
-		//59	admtg_dgns_cd	admtg_dgns_cd	Claim Admitting Diagnosis Code	CHAR	7
-		STRING admtg_dgns_cd;
-		//60	admtg_dgns_vrsn_cd	admtg_dgns_vrsn_cd	Claim Admitting Diagnosis Code Diagnosis Version Code (ICD-9 or ICD-10)	CHAR	1
-		STRING admtg_dgns_vrsn_cd;
-		//61	prncpal_dgns_cd	prncpal_dgns_cd	Primary Claim Diagnosis Code	CHAR	7
-		STRING prncpal_dgns_cd;
-		//62	prncpal_dgns_vrsn_cd	prncpal_dgns_vrsn_cd	Primary Claim Diagnosis Code Diagnosis Version Code (ICD-9 or ICD-10)	CHAR	1
-		STRING prncpal_dgns_vrsn_cd;
+	EXPORT base_icd_diag_proc_layout := RECORD
 		//63	icd dgns cd1	icd_dgns_cd1	Claim Diagnosis Code I	CHAR	7
 		STRING icd_dgns_cd1;
 		//64	icd dgns vrsn cd1	icd_dgns_vrsn_cd1	Claim Diagnosis Code I Diagnosis Version Code (ICD-9 or ICD-10)	CHAR	1
@@ -510,6 +386,136 @@
 		STRING icd_prcdr_vrsn_cd25;
 		//250	prcdr_dt25	prcdr_dt25	Claim Procedure Code XXV Date	DATE	8
 		STRING prcdr_dt25;
+	END;
+	
+	EXPORT base_layout := RECORD
+		//1	dsysrtky	desy_sort_key	LDS Beneficiary ID	NUM	9
+		STRING desy_sort_key;
+		//2	claimno	claim_no	Claim number	NUM	12
+		STRING claim_no;
+		//3	provider	prvdr_num	Provider Number	CHAR	10
+		STRING prvdr_num;
+		//4	thru_dt	clm_thru_dt	Claim Through Date (Determines Year of Claim)	DATE	8
+		STRING clm_thru_dt;
+		//5	ric_cd	nch_near_line_rec_ident_cd	NCH Near Line Record Identification Code	CHAR	1
+		STRING nch_near_line_rec_ident_cd;
+		//6	clm_type	nch_clm_type_cd	NCH Claim Type Code	CHAR	2
+		STRING nch_clm_type_cd;
+		//7	query_cd	claim_query_code	Claim Query Code	CHAR	1
+		STRING claim_query_code;
+		//8	fac_type	clm_fac_type_cd	Claim Facility Type Code	CHAR	1
+		STRING clm_fac_type_cd;
+		//9	typesrvc	clm_srvc_clsfctn_type_cd	Claim Service classification Type Code	CHAR	1
+		STRING clm_srvc_clsfctn_type_cd;
+		//10	freq_cd	clm_freq_cd	Claim Frequency Code	CHAR	1
+		STRING clm_freq_cd;
+		//11	fi_num	fi_num	FI Number	CHAR	5
+		STRING fi_num;
+		//12	nopay_cd	clm_mdcr_non_pmt_rsn_cd	Claim Medicare Non Payment Reason Code	CHAR	2
+		STRING clm_mdcr_non_pmt_rsn_cd;
+		//13	pmt_amt	clm_pmt_amt	Claim Payment Amount	NUM	12
+		STRING clm_pmt_amt;
+		//14	prpayamt	nch_prmry_pyr_clm_pd_amt	NCH Primary Payer Claim Paid Amount	NUM	12
+		STRING nch_prmry_pyr_clm_pd_amt;
+		//15	prpay_cd	nch_prmry_pyr_cd	NCH Primary Payer Code	CHAR	1
+		STRING nch_prmry_pyr_cd;
+		//16	actioncd	fi_clm_actn_cd	FI Claim Action Code	CHAR	1
+		STRING fi_clm_actn_cd;
+		//17	prstate	prvdr_state_cd	NCH Provider State Code	CHAR	2
+		STRING prvdr_state_cd;
+		//18	orgnpinm	org_npi_num	Organization NPI Number	CHAR	10
+		STRING org_npi_num;
+		//19	at_upin	at_physn_upin	Claim Attending Physician UPIN Number	CHAR	12
+		STRING at_physn_upin;
+		//20	at_npi	at_physn_npi	Claim Attending Physician NPI Number	CHAR	12
+		STRING at_physn_npi;
+		//21	op_upin	op_physn_upin	Claim Operating Physician UPIN Number	CHAR	12
+		STRING op_physn_upin;
+		//22	op_npi	op_physn_npi	Claim Operating Physician NPI Number	CHAR	12
+		STRING op_physn_npi;
+		//23	ot_upin	ot_physn_upin	Claim Other Physician UPIN Number	CHAR	12
+		STRING ot_physn_upin;
+		//24	ot_npi	ot_physn_npi	Claim Other Physician NPI Number	CHAR	12
+		STRING ot_physn_npi;
+		//25	mcopdsw	clm_mco_pd_sw	Claim MCO Paid Switch	CHAR	1
+		STRING clm_mco_pd_sw;
+		//26	stus_cd	ptnt_dschrg_stus_cd	Patient Discharge Status Code	CHAR	2
+		STRING ptnt_dschrg_stus_cd;
+		//27	pps_ind	clm_pps_ind_cd	Claim PPS Indicator Code	CHAR	1
+		STRING clm_pps_ind_cd;
+		//28	tot_chrg	clm_tot_chrg_amt	Claim Total Charge Amount	NUM	12
+		STRING clm_tot_chrg_amt;
+		//29	admsn_dt	clm_admsn_dt	Claim Admission Date	DATE	8
+		STRING clm_admsn_dt;
+		//30	type_adm	clm_ip_admsn_type_cd	Claim Inpatient Admission Type Code	CHAR	1
+		STRING clm_ip_admsn_type_cd;
+		//31	src_adms	clm_src_ip_admsn_cd	Claim Source Inpatient Admission Code	CHAR	1
+		STRING clm_src_ip_admsn_cd;
+		//32	ptntstus	nch_ptnt_status_ind_cd	NCH Patient Status Indicator Code	CHAR	1
+		STRING nch_ptnt_status_ind_cd;
+		//33	per_diem	clm_pass_thru_per_diem_amt	Claim Pass Thru Per Diem Amount	NUM	12
+		STRING clm_pass_thru_per_diem_amt;
+		//34	ded_amt	nch_bene_ip_ddctbl_amt	NCH Beneficiary Inpatient Deductible Amount	NUM	12
+		STRING nch_bene_ip_ddctbl_amt;
+		//35	coin_amt	nch_bene_pta_coinsrnc_lblty_am	NCH Beneficiary Part A Coinsurance Liability Amount	NUM	12
+		STRING nch_bene_pta_coinsrnc_lblty_am;
+		//36	blddedam	nch_bene_blood_ddctbl_lblty_am	NCH Beneficiary Blood Deductible Liability Amount	NUM	12
+		STRING nch_bene_blood_ddctbl_lblty_am;
+		//37	pcchgamt	nch_profnl_cmpnt_chrg_amt	NCH Professional Component Charge Amount	NUM	12
+		STRING nch_profnl_cmpnt_chrg_amt;
+		//38	ncchgamt	nch_ip_ncvrd_chrg_amt	NCH Inpatient Noncovered Charge Amount	NUM	12
+		STRING nch_ip_ncvrd_chrg_amt;
+		//39	pps_cptl	clm_tot_pps_cptl_amt	Claim Total PPS Capital Amount	NUM	12
+		STRING clm_tot_pps_cptl_amt;
+		//40	cptl_fsp	clm_pps_cptl_fsp_amt	Claim PPS Capital FSP Amount	NUM	12
+		STRING clm_pps_cptl_fsp_amt;
+		//41	cptloutl	clm_pps_cptl_outlier_amt	Claim PPS Capital Outlier Amount	NUM	12
+		STRING clm_pps_cptl_outlier_amt;
+		//42	disp_shr	clm_pps_cptl_dsprprtnt_shr_amt	Claim PPS Capital Disproportionate Share Amount	NUM	12
+		STRING clm_pps_cptl_dsprprtnt_shr_amt;
+		//43	ime_amt	clm_pps_cptl_ime_amt	Claim PPS Capital IME Amount	NUM	12
+		STRING clm_pps_cptl_ime_amt;
+		//44	cptl_exp	clm_pps_cptl_excptn_amt	Claim PPS Capital Exception Amount	NUM	12
+		STRING clm_pps_cptl_excptn_amt;
+		//45	hldhrmls	clm_pps_old_cptl_hld_hrmls_amt	Claim PPS Old Capital Hold Harmless Amount	NUM	12
+		STRING clm_pps_old_cptl_hld_hrmls_amt;
+		//46	drgwtamt	clm_pps_cptl_drg_wt_num	Claim PPS Capital DRG Weight Number	NUM	8
+		STRING clm_pps_cptl_drg_wt_num;
+		//47	util_day	clm_utlztn_day_cnt	Claim Utilization Day Count	NUM	3
+		STRING clm_utlztn_day_cnt;
+		//48	coin_day	bene_tot_coinsrnc_days_cnt	Beneficiary Total Coinsurance Days Count	NUM	3
+		STRING bene_tot_coinsrnc_days_cnt;
+		//49	lrd_use	bene_lrd_used_cnt	Beneficiary LRD Used Count	NUM	3
+		STRING bene_lrd_used_cnt;
+		//50	nutilday	clm_non_utlztn_days_cnt	Claim Non Utilization Days Count	NUM	5
+		STRING clm_non_utlztn_days_cnt;
+		//51	bldfrnsh	nch_blood_pnts_frnshd_qty	NCH Blood Pints Furnished Quantity	NUM	3
+		STRING nch_blood_pnts_frnshd_qty;
+		//52	ncovfrom	nch_vrfd_ncvrd_stay_from_dt	NCH Verified Noncovered Stay From Date	DATE	8
+		STRING nch_vrfd_ncvrd_stay_from_dt;
+		//53	ncovthru	nch_vrfd_ncvrd_stay_thru_dt	NCH Verified Noncovered Stay Through Date	DATE	8
+		STRING nch_vrfd_ncvrd_stay_thru_dt;
+		//54	exhst_dt	nch_bene_mdcr_bnfts_exhtd_dt_i	NCH Beneficiary Medicare Benefits Exhausted Date	DATE	8
+		STRING nch_bene_mdcr_bnfts_exhtd_dt_i;
+		//55	dschrgdt	nch_bene_dschrg_dt	NCH Beneficiary Discharge Date	DATE	8
+		STRING nch_bene_dschrg_dt;
+		//56	drg_cd	clm_drg_cd	Claim Diagnosis Related Group Code	CHAR	3
+		STRING clm_drg_cd;
+		//57	outlr_cd	clm_drg_outlier_stay_cd	Claim Diagnosis Related Group Outlier Stay Code	CHAR	1
+		STRING clm_drg_outlier_stay_cd;
+		//58	outlrpmt	nch_drg_outlier_aprvd_pmt_amt	NCH DRG Outlier Approved Payment Amount	NUM	12
+		STRING nch_drg_outlier_aprvd_pmt_amt;
+		//59	admtg_dgns_cd	admtg_dgns_cd	Claim Admitting Diagnosis Code	CHAR	7
+		STRING admtg_dgns_cd;
+		//60	admtg_dgns_vrsn_cd	admtg_dgns_vrsn_cd	Claim Admitting Diagnosis Code Diagnosis Version Code (ICD-9 or ICD-10)	CHAR	1
+		STRING admtg_dgns_vrsn_cd;
+		//61	prncpal_dgns_cd	prncpal_dgns_cd	Primary Claim Diagnosis Code	CHAR	7
+		STRING prncpal_dgns_cd;
+		//62	prncpal_dgns_vrsn_cd	prncpal_dgns_vrsn_cd	Primary Claim Diagnosis Code Diagnosis Version Code (ICD-9 or ICD-10)	CHAR	1
+		STRING prncpal_dgns_vrsn_cd;
+		
+		base_icd_diag_proc_layout;
+		
 		//251	dob_dt	dob_dt	LDS Age Category	NUM	1
 		STRING dob_dt;
 		//252	gndr_cd	gndr_cd	Gender Code from Claim	CHAR	1
