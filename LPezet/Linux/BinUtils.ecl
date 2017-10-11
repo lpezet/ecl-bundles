@@ -13,9 +13,10 @@
 	EXPORT cat( STRING localUri ) := PIPE('cat ' + localUri, line_layout, CSV(SEPARATOR(''), QUOTE('')) );
 	
 	EXPORT mkdir( STRING localUri , BOOLEAN makeParents = false) := FUNCTION
-		A := '[ ! -d ' + localUri + ' ] && mkdir ';
+		A := 'bash -c "[ ! -d ' + localUri + ' ] && mkdir ';
 		B := A + IF(makeParents, '-p ', '');
-		oCmd := B;
+		C := B + localUri + ' || exit 0"';
+		oCmd := C;
 		RETURN PIPE(oCmd + localUri, line_layout, CSV(SEPARATOR(''), QUOTE('')) );
 	END;
 	
