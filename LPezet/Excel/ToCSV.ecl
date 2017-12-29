@@ -1,14 +1,18 @@
 ﻿IMPORT LPezet.Linux.Curl;
 IMPORT LPezet.Linux.BinUtils;
 
+// Installation:
+// sudo apt-get install python3 python3-pip
+// sudo pip3 install xlrd
+// 
 EXPORT ToCSV := MODULE
 	
 	EXPORT IOptions := INTERFACE
-		EXPORT STRING python_bin;
-		EXPORT STRING quoting;
-		EXPORT STRING linedelimiter;
+		EXPORT STRING python_bin;				// Python 3 bin
+		EXPORT STRING quoting; 					// possible values: none, minimal, nonnumeric, all
+		EXPORT STRING linedelimiter;		// usually: \r, \n, \r\n
 		EXPORT STRING delimiter;
-		EXPORT STRING output_encoding;
+		EXPORT STRING output_encoding;	// utf-8
 	END;
 	
 	EXPORT DefaultOptions := MODULE(IOptions)
@@ -20,7 +24,7 @@ EXPORT ToCSV := MODULE
 	END;
 
 	SHARED mBaseScriptsPath := '/tmp/hpcc/lpezet/excel';
-	SHARED mXLS2CSVScriptURL := 'https://raw.githubusercontent.com/lpezet/ecl-bundles/master/Excel/xls2csv.py';
+	SHARED mXLS2CSVScriptURL := 'https://raw.githubusercontent.com/lpezet/ecl-bundles/master/LPezet/Excel/xls2csv.py';
 	SHARED mXLS2CSVScriptLocal := mBaseScriptsPath + '/xls2csv.py';
 	//SHARED mXLSX2CSVScriptURL := 'https://raw.githubusercontent.com/lpezet/ecl-bundles/master/Excel/xls2csv.py';
 	
@@ -30,10 +34,16 @@ EXPORT ToCSV := MODULE
 	);
 	
 	EXPORT xls2csv( STRING pXLSFilePath, STRING pCSVFilePath, STRING pSheetName = '', UNSIGNED pSheetIndex = -1, IOptions pOptions = DefaultOptions ) := FUNCTION
-		oParams := IF( pSheetName != '', '-n "' + pSheetName + '"', '-s ' + pSheetIndex );
+		oParams_0 := IF( pSheetName != '', '-n "' + pSheetName + '"', '-s ' + pSheetIndex );
+		oParams_1 := oParams_0 + IF( pOptions.quoting = '', '', ' -q ' + pOptions.quoting );
+		oParams_2 := oParams_1 + IF( pOptions.linedelimiter = '', '', ' -l ' + pOptions.linedelimiter );
+		oParams_3 := oParams_2 + IF( pOptions.delimiter = '', '', ' -d ' + pOptions.delimiter );
+		oParams_4 := oParams_3 + IF( pOptions.output_encoding = '', '', ' -c ' + pOptions.output_encoding );
+
+		oParams := oParams_4;
 		RETURN SEQUENTIAL(
 			setup_scripts(),
-			OUTPUT( PIPE( pOptions.python_bin + ' ' + mXLS2CSVScriptLocal + ' ' + oParams + ' "' + pXLSFilePath + '" "' + pCSVFilePath + '"', BinUtils.line_layout), NAMED('xls2csv') )
+			OUTPUT( PIPE( pOptions.python_bin + ' ' + mXLS2CSVScriptLocal + ' ' + oParams + ' "' + pXLSFilePath + '" "' + pCSVFilePath + '"', BinUtils.line_layout, CSV(SEPARATOR(''), QUOTE(''))), NAMED('xls2csv') )
 		);
 	END;
 		
