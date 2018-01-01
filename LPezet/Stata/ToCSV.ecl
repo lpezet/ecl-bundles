@@ -27,7 +27,6 @@ EXPORT ToCSV := MODULE
 	SHARED mBaseScriptsPath := '/tmp/hpcc/lpezet/stata';
 	SHARED mDAT2CSVScriptURL := 'https://raw.githubusercontent.com/lpezet/ecl-bundles/master/LPezet/Stata/dta2csv.py';
 	SHARED mDAT2CSVScriptLocal := mBaseScriptsPath + '/dta2csv.py';
-	//SHARED mXLSX2CSVScriptURL := 'https://raw.githubusercontent.com/lpezet/ecl-bundles/master/Excel/xls2csv.py';
 	
 	EXPORT setup_scripts() := SEQUENTIAL(
 		OUTPUT( BinUtils.mkdir( mBaseScriptsPath, true ), NAMED('SetupMkdir') ),
