@@ -1,6 +1,8 @@
 ﻿IMPORT LPezet.Linux.Curl;
 IMPORT LPezet.Linux.BinUtils;
 
+// TODO: Change .py script(s) to use Pandas instead.
+//
 // Installation:
 // sudo apt-get install python3 python3-pip
 // sudo pip3 install xlrd
