@@ -2,6 +2,13 @@
 
 EXPORT Curl := MODULE
 
+	EXPORT IOptions := INTERFACE
+		EXPORT BOOLEAN follow_redirects;
+	END;
+	
+	EXPORT DefaultOptions := MODULE(IOptions)
+		EXPORT BOOLEAN follow_redirects := false;
+	END;
 
 	EXPORT info_layout := RECORD
 		STRING content_type; 					// The Content-Type of the requested document, if there was any.
@@ -42,7 +49,6 @@ EXPORT Curl := MODULE
 	EXPORT batch_layout := RECORD
 		STRING remoteUri;
 		STRING localUri;
-		BOOLEAN ssl;
 	END;
 	
 	
@@ -50,23 +56,30 @@ EXPORT Curl := MODULE
 	//SHARED mFormat := '%{content_type},%{ftp_entry_path},%{http_code},%{http_connect},%{num_connects},%{num_redirects},"%{redirect_url}",%{size_download},%{size_header},%{size_request},%{size_upload},%{speed_download},%{speed_upload},%{ssl_verify_result},%{time_appconnect},%{time_connect},%{time_namelookup},%{time_pretransfer},%{time_redirect},%{time_starttransfer},%{time_total},"%{url_effective}"';
 	//PIPE('curl -w \'' + format + '\' -s -o /dev/null http://www.centos.org', curl_layout, CSV);
 	
+	SHARED create_options(IOptions pOptions) := FUNCTION
+		oParams_0 := IF( pOptions.follow_redirects, ' -L', '' );
+		oParams := oParams_0;
+		RETURN oParams;
+	END;
+	
 	EXPORT download(
 		STRING remoteUri,
 		STRING localUri,
-		BOOLEAN ssl = false) := PIPE('curl -w \'' + mFormat + '\' -s -o ' + localUri + ' "' + remoteUri + '"', info_layout, CSV(SEPARATOR('\t')) );
+		IOptions pOptions = DefaultOptions) := PIPE('curl -w \'' + mFormat + '\' ' + create_options( pOptions ) + ' -s -o ' + localUri + ' "' + remoteUri + '"', info_layout, CSV(SEPARATOR('\t')) );
+		//OUTPUT('curl -w \'' + mFormat + '\' -s -o ' + localUri + ' "' + remoteUri + '"');//, info_layout, CSV(SEPARATOR('\t')) );
 		
 	EXPORT download_to_dataset(
 		STRING remoteUri,
-		BOOLEAN ssl = false) := PIPE('curl -s -o - "' + remoteUri + '"', Binutils.line_layout, CSV(SEPARATOR(''), QUOTE('')) );
+		IOptions pOptions = DefaultOptions) := PIPE('curl -s -o - "' + remoteUri + '"', Binutils.line_layout, CSV(SEPARATOR(''), QUOTE('')) );
 		
-	SHARED batch_info_layout BatchDownload (batch_layout pInput) := TRANSFORM
+	SHARED batch_info_layout BatchDownload (batch_layout pInput, IOptions pOptions) := TRANSFORM
 		SELF.remoteUri := pInput.remoteUri;
 		SELF.localUri := pInput.localUri;
-		SELF := download(pInput.remoteUri, pInput.localUri, pInput.ssl)[1];
+		SELF := download(pInput.remoteUri, pInput.localUri, pOptions)[1];
 	END;
 
 	EXPORT batch_download(
-		DATASET(batch_layout) batch) := NORMALIZE( batch, 1, BatchDownload(LEFT) );
+		DATASET(batch_layout) batch, IOptions pOptions = DefaultOptions) := NORMALIZE( batch, 1, BatchDownload(LEFT, pOptions) );
 		
 END;
 
