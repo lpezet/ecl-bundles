@@ -34,7 +34,7 @@ EXPORT ToCSV := MODULE
 		OUTPUT( Curl.download( mDAT2CSVScriptURL, mDAT2CSVScriptLocal ), NAMED('SetupDownloadDATScript') )
 	);
 	
-	EXPORT xls2csv( STRING pInputFilePath, STRING pOutputFilePath, STRING pSheetName = '', UNSIGNED pSheetIndex = -1, IOptions pOptions = DefaultOptions ) := FUNCTION
+	EXPORT dat2csv( STRING pInputFilePath, STRING pOutputFilePath, STRING pSheetName = '', UNSIGNED pSheetIndex = -1, IOptions pOptions = DefaultOptions ) := FUNCTION
 		oParams_0 := IF( pOptions.quoting = '', '', ' -q ' + pOptions.quoting );
 		oParams_1 := oParams_0 + IF( pOptions.linedelimiter = '', '', ' -l ' + pOptions.linedelimiter );
 		oParams_2 := oParams_1 + IF( pOptions.delimiter = '', '', ' -d ' + pOptions.delimiter );
