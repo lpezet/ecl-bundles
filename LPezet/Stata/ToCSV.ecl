@@ -29,8 +29,8 @@ EXPORT ToCSV := MODULE
 	SHARED mDAT2CSVScriptLocal := mBaseScriptsPath + '/dta2csv.py';
 	
 	EXPORT setup_scripts() := SEQUENTIAL(
-		OUTPUT( BinUtils.mkdir( mBaseScriptsPath, true ), NAMED('SetupMkdir') ),
-		OUTPUT( Curl.download( mDAT2CSVScriptURL, mDAT2CSVScriptLocal ), NAMED('SetupDownloadDATScript') )
+		OUTPUT( BinUtils.mkdir( mBaseScriptsPath, true ) ), // , NAMED('SetupMkdir' + pNameId ) ),
+		OUTPUT( Curl.download( mDAT2CSVScriptURL, mDAT2CSVScriptLocal  ) ) //, NAMED('SetupDownloadDATScript' + pNameId) )
 	);
 	
 	EXPORT dat2csv( STRING pInputFilePath, STRING pOutputFilePath, STRING pSheetName = '', UNSIGNED pSheetIndex = -1, IOptions pOptions = DefaultOptions ) := FUNCTION
@@ -40,8 +40,7 @@ EXPORT ToCSV := MODULE
 		oParams_3 := oParams_2 + IF( pOptions.output_encoding = '', '', ' -c ' + pOptions.output_encoding );
 		oParams := oParams_3;
 		RETURN SEQUENTIAL(
-			setup_scripts(),
-			OUTPUT( PIPE( pOptions.python_bin + ' ' + mDAT2CSVScriptLocal + ' ' + oParams + ' "' + pInputFilePath + '" "' + pOutputFilePath + '"', BinUtils.line_layout, CSV(SEPARATOR(''), QUOTE(''))), NAMED('dat2csv') )
+			OUTPUT( PIPE( pOptions.python_bin + ' ' + mDAT2CSVScriptLocal + ' ' + oParams + ' "' + pInputFilePath + '" "' + pOutputFilePath + '"', BinUtils.line_layout, CSV(SEPARATOR(''), QUOTE(''))) ) //, NAMED('dat2csv') )
 		);
 	END;
 		
