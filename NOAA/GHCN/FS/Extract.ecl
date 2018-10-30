@@ -73,6 +73,81 @@ EXPORT Extract := MODULE
 			SFile.AddSub(Datasets.File_Raw_Daily, Datasets.File_Single_Raw_Daily(pId))
 		);
 		
-	END;		
+	END;	
+	
+	// Monthly
+	// https://www.ncei.noaa.gov/data/gsom/doc/GSOMReadme.txt
+	// https://www.ncei.noaa.gov/data/gsom/access/XXY########.csv
+	EXPORT gen_monthly(STRING pId) := FUNCTION
+		File_In := BaseDataDirectory + pId + '.mly';
+		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
+		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), EXTEND, OVERWRITE);
+	END;
+	/*
+	SHARED gen_monthlies(pStations) := MACRO
+		#DECLARE (Ndx)
+		#SET (Ndx, 1);           
+		#LOOP
+			#IF (%Ndx% > COUNT(pStations))  
+				 #BREAK         // break out of the loop
+			#ELSE             //otherwise
+				 //OUTPUT('Hello ' + oDS[%Ndx%].id );
+				 Extract.gen_monthly( pStations[%Ndx%].id );
+		#SET (Ndx, %Ndx% + 1)
+											 //and increment the value of Ndx
+			 #END
+		#END
+	END;
+	*/
+	
+ EXPORT monthly(STRING pId) := FUNCTION
+		File_In := BaseDataDirectory + pId + '.mly';
+		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
+		RETURN SEQUENTIAL(
+			SFile.Create(Datasets.File_Raw_Monthly),
+			SFile.RemoveSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly(pId)),
+			OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), OVERWRITE),
+			SFile.AddSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly(pId))
+		);
+	END;
+	
+	// DATASET(Layouts.station_id_layout) pStations
+	EXPORT monthlies(DATASET(Layouts.station_id_layout) pStations) := FUNCTION
+		RETURN SEQUENTIAL(
+			SFile.Create(Datasets.File_Raw_Monthly),
+			//Std.File.StartSuperFileTransaction(),
+			NOTHOR(APPLY( pStations, 	SFile.RemoveSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly( id )) )),
+			APPLY( GLOBAL(pStations), gen_monthly( id ) ),
+			NOTHOR(APPLY( pStations, 	SFile.AddSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly( id )) ))
+			//Std.File.FinishSuperFileTransaction()
+		);
+		/*
+		RETURN //SEQUENTIAL(
+			//Std.File.StartSuperFileTransaction(),
+			APPLY( GLOBAL(pStations, FEW), monthly( id ) );
+			//Std.File.FinishSuperFileTransaction()
+		//);
+	*/
+	END;
+	
+	EXPORT monthliesOld(pStations) := FUNCTIONMACRO
+		RETURN SEQUENTIAL(
+		LOADXML('<xml/>');
+		#DECLARE (oIndex)
+		#SET (oIndex, 1);
+		#LOOP
+			#IF (%oIndex% > COUNT(pStations))
+				#BREAK
+			#END
+			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
+			Extract.monthly( pStations[%oIndex%].id ),
+			#SET (oIndex, %oIndex%+1)
+		#END
+		);
+	ENDMACRO;
+	
+	
 
 END;

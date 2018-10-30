@@ -65,5 +65,16 @@ EXPORT Tranxform := MODULE
 		Final_6 := DISTRIBUTE(Final_5, HASH(id));
 		RETURN OUTPUT(Final_6,, Datasets.File_Daily, OVERWRITE);
 	END;
+	
+	EXPORT monthly() := FUNCTION
+		Final_1 := Datasets.dsRawMonthly;
+		//Final_2 := TABLE(Final_1, { INTEGER2 year := (INTEGER2) year; INTEGER1 month := (INTEGER1) month; Final_1 });
+		Final_2 := Final_1;
+		Final_3 := PROJECT(Final_2, Layouts.monthly_layout);
+		Final_4 := SORT(Final_3, id, date);
+		Final_5 := DEDUP(Final_4, id, date);
+		Final_6 := DISTRIBUTE(Final_5, HASH(id));
+		RETURN OUTPUT(Final_6,, Datasets.File_Monthly, OVERWRITE);
+	END;
 
 END;
