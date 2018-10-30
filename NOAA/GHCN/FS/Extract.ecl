@@ -82,7 +82,7 @@ EXPORT Extract := MODULE
 		File_In := BaseDataDirectory + pId + '.mly';
 		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
 		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
-		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), EXTEND, OVERWRITE);
+		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), OVERWRITE);
 	END;
 	/*
 	SHARED gen_monthlies(pStations) := MACRO
