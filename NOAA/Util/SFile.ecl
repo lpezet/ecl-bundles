@@ -25,7 +25,7 @@ EXPORT SFile := MODULE
 	END;
 	
 	EXPORT RemoveSub(STRING pSuperFile, STRING pSub) := FUNCTION
-		RETURN IF(Std.File.SuperFileExists(pSuperFile), SEQUENTIAL(
+		RETURN IF(Std.File.SuperFileExists(pSuperFile) AND Std.File.FindSuperFileSubName(pSuperFile, pSub) >= 1, SEQUENTIAL(
 			Std.File.StartSuperFileTransaction(),
 			Std.File.RemoveSuperFile(pSuperFile, pSub),
 			Std.File.FinishSuperFileTransaction()
