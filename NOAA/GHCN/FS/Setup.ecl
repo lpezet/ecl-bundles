@@ -76,6 +76,7 @@ EXPORT Setup := MODULE
 	END;
 	
 	EXPORT Basics() := FUNCTION
+		#OPTION('targetClusterType', 'hthor');
 		RETURN PARALLEL(
 			Stations(),
 			Elements(),
