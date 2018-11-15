@@ -6,6 +6,10 @@ IMPORT NOAA.Util.GeometryLite as Geometry;
 
 IMPORT LPezet.Linux.Curl;
 
+// WARNING
+// New file to look into
+// https://www.ncdc.noaa.gov/snow-and-ice/
+
 
 EXPORT Setup := MODULE
 
@@ -76,7 +80,6 @@ EXPORT Setup := MODULE
 	END;
 	
 	EXPORT Basics() := FUNCTION
-		#OPTION('targetClusterType', 'hthor');
 		RETURN PARALLEL(
 			Stations(),
 			Elements(),
@@ -85,6 +88,19 @@ EXPORT Setup := MODULE
 			StationsInventory()
 		);
 	END;
+	
+	EXPORT DownloadDaily(DATASET(Layouts.station_id_layout) pStationIds) := FUNCTION
+		RETURN APPLY( pStationIds, OUTPUT(Curl.download('https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/' + id + '.dly', '/var/lib/HPCCSystems/mydropzone/' + id + '.dly')));
+	END;
+	
+	EXPORT LoadDaily(pStationIds) := MACRO
+		Extract.dailies( pStationIds );
+	ENDMACRO;
+	
+	EXPORT TransformDaily(DATASET(Layouts.station_id_layout) pStationIds) := FUNCTION
+		RETURN Tranxform.daily();
+	END;
+	
 	
 	//DATASET(Layouts.station_id_layout) pStations
 	EXPORT Daily(pStations) := MACRO
@@ -101,18 +117,35 @@ EXPORT Setup := MODULE
 		Tranxform.daily();
 	ENDMACRO;
 	
+	/*
 	EXPORT Monthly(DATASET(Layouts.station_id_layout) pStationIds) := FUNCTION
 		RETURN SEQUENTIAL(
 			APPLY( pStationIds, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly'))),
 			Extract.monthlies( pStationIds ),
 			Tranxform.monthly()
 		);
-		/*		
+		
 		//NB: Must be sequential...
-		APPLY( pStations, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
-		Extract.monthlies( pStations );
-		Tranxform.monthly();
-		*/
+		//APPLY( pStations, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
+		//Extract.monthlies( pStations );
+		//Tranxform.monthly();
+		
 	END;
-
+	*/
+	
+	// ##### WARNING #####
+	// There's another version here:
+	// https://www.ncdc.noaa.gov/ghcnm/v3.php
+	// ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/v3/README
+	// "This version currently contains monthly mean temperature, monthly maximum temperature and monthly minimum temperature."
+	// Dunno what's the difference yet with 
+	// https://www.ncei.noaa.gov/data/gsom/access/
+	EXPORT DownloadMonthly(DATASET(Layouts.station_id_layout) pStationIds) := FUNCTION
+		RETURN APPLY( pStationIds, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
+	END;
+	EXPORT LoadMonthly(pStationIds) := MACRO
+		Extract.monthlies( pStationIds );
+	ENDMACRO;
+	//EXPORT TransformMonthly( STRING pStationId ) := Tranxform.monthly( pStationId );
+	//EXPORT TransformMonthly(DATASET(Layouts.station_id_layout) pStationIds) := Tranxform.monthly();
 END;

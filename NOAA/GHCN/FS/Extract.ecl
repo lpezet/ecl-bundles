@@ -100,8 +100,30 @@ EXPORT Extract := MODULE
 		#END
 	END;
 	*/
+	/*
+	EXPORT new_monthly(STRING pId) := FUNCTION
+		File_In := BaseDataDirectory + pId + '.mly';
+		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout2,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
+		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId) + 'new', OVERWRITE);
+	END;
+	*/
+	
 	
  EXPORT monthly(STRING pId) := FUNCTION
+		File_In := BaseDataDirectory + pId + '.mly';
+		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
+		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
+		//RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), OVERWRITE);
+		RETURN SEQUENTIAL(
+			SFile.Create(Datasets.File_Raw_Monthly),
+			SFile.RemoveSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly(pId)),
+			OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), OVERWRITE),
+			SFile.AddSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly(pId))
+		);
+	END;
+	
+ EXPORT monthlyOld(STRING pId) := FUNCTION
 		File_In := BaseDataDirectory + pId + '.mly';
 		DS_In := DATASET(std.File.ExternalLogicalFilename(LandingZone_IP, File_In), Layouts.raw_monthly_layout,CSV(HEADING(1)),UNSORTED);//CSV(HEADING(0), SEPARATOR(['']), TERMINATOR(['\n','\r\n','\n\r'])));
 		DS_Dist := DISTRIBUTE(DS_In, HASH(id));
@@ -112,9 +134,22 @@ EXPORT Extract := MODULE
 			SFile.AddSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly(pId))
 		);
 	END;
+	EXPORT monthlies(pStations) := MACRO
+		LOADXML('<xml/>');
+		#DECLARE (oIndex)
+		#SET (oIndex, 1);
+		#LOOP
+			#IF (%oIndex% > COUNT(pStations))
+				#BREAK
+			#END
+			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
+			Extract.monthly( pStations[%oIndex%].id );
+			#SET (oIndex, %oIndex%+1)
+		#END
+	ENDMACRO;
 	
 	// DATASET(Layouts.station_id_layout) pStations
-	EXPORT monthlies(DATASET(Layouts.station_id_layout) pStations) := FUNCTION
+	EXPORT monthliesOld(DATASET(Layouts.station_id_layout) pStations) := FUNCTION
 		RETURN SEQUENTIAL(
 			SFile.Create(Datasets.File_Raw_Monthly),
 			//Std.File.StartSuperFileTransaction(),
@@ -132,7 +167,7 @@ EXPORT Extract := MODULE
 	*/
 	END;
 	
-	EXPORT monthliesOld(pStations) := FUNCTIONMACRO
+	EXPORT monthliesOld2(pStations) := FUNCTIONMACRO
 		RETURN SEQUENTIAL(
 		LOADXML('<xml/>');
 		#DECLARE (oIndex)

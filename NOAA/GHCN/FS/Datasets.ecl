@@ -13,7 +13,8 @@ EXPORT Datasets := MODULE
 	EXPORT File_Daily := '~weather::daily';
  EXPORT File_Single_Raw_Monthly(STRING pId) := '~weather::raw::monthly::' + pId;
 	EXPORT File_Raw_Monthly := '~weather::raw::monthly';
-	EXPORT File_Monthly := '~weather::monthly';
+	EXPORT File_Single_Monthly(STRING pId) := '~weather::monthly::' + pId;
+ EXPORT File_Monthly := '~weather::monthly';
  	
 	EXPORT File_Raw_Stations := '~weather::raw::stations';
 	EXPORT File_Stations := '~weather::stations';
@@ -31,6 +32,7 @@ EXPORT Datasets := MODULE
 	EXPORT dsDaily := DATASET(File_Daily, Layouts.daily_layout, THOR);
 	EXPORT dsSingleRawMonthly(STRING pId) := DATASET(File_Single_Raw_Monthly(pId), Layouts.raw_monthly_layout, THOR);
 	EXPORT dsRawMonthly := DATASET(File_Raw_Monthly, Layouts.raw_monthly_layout, THOR, OPT);
+	EXPORT dsSingleMonthly(STRING pId) := DATASET(File_Single_Monthly(pId), Layouts.monthly_layout, THOR);
 	EXPORT dsMonthly := DATASET(File_Monthly, Layouts.monthly_layout, THOR);
 	EXPORT dsRawStations := DATASET(File_Raw_Stations, Layouts.raw_station_layout, THOR);
 	EXPORT dsStations := DATASET(File_Stations, Layouts.station_layout, THOR);
