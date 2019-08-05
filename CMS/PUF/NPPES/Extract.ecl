@@ -12,12 +12,12 @@ EXPORT Extract := MODULE
 	SHARED mLocalPath := '/var/lib/HPCCSystems/mydropzone/CMS/NPPES/';
 	
 	EXPORT extract_full() := FUNCTION
-		oLocalFile := mLocalPath + 'NPPES_Data_Dissemination_Dec_2015.zip';
+		oLocalFile := mLocalPath + 'NPPES_Data_Dissemination_June_2019.zip';
 
 		RETURN SEQUENTIAL(
 			#OPTION('targetClusterType','hthor'),
 			OUTPUT( BinUtils.mkdir( mLocalPath, true ), NAMED('CreatePath')),
-			OUTPUT( Curl.download('http://download.cms.gov/nppes/NPPES_Data_Dissemination_Dec_2015.zip', oLocalFile, false), NAMED('Download')),
+			OUTPUT( Curl.download('https://download.cms.gov/nppes/NPPES_Data_Dissemination_June_2019.zip', oLocalFile), NAMED('Download')),
 			OUTPUT( BinUtils.checksum( oLocalFile ), NAMED('Checksum')),
 			OUTPUT( Zip.unzip(oLocalFile, mLocalPath, true), NAMED('Unzipping')),
 		);
@@ -29,7 +29,7 @@ EXPORT Extract := MODULE
 		RETURN SEQUENTIAL(
 			#OPTION('targetClusterType','hthor'),
 			OUTPUT( BinUtils.mkdir( mLocalPath, true ), NAMED('CreatePath')),
-			OUTPUT( Curl.download('http://download.cms.gov/nppes/NPPES_Data_Dissemination_121415_122015_Weekly.zip', oLocalFile, false), NAMED('Download')),
+			OUTPUT( Curl.download('http://download.cms.gov/nppes/NPPES_Data_Dissemination_121415_122015_Weekly.zip', oLocalFile), NAMED('Download')),
 			OUTPUT( BinUtils.checksum( oLocalFile ), NAMED('Checksum')),
 			OUTPUT( Zip.unzip(oLocalFile, mLocalPath, true), NAMED('Unzipping')),
 		);
@@ -41,7 +41,7 @@ EXPORT Extract := MODULE
 		RETURN SEQUENTIAL(
 			#OPTION('targetClusterType','hthor'),
 			OUTPUT( BinUtils.mkdir( mLocalPath, true ), NAMED('CreatePath')),
-			OUTPUT( Curl.download('http://download.cms.gov/nppes/NPPES_Deactivated_NPI_Report_121515.zip', oLocalFile, false), NAMED('Download')),
+			OUTPUT( Curl.download('http://download.cms.gov/nppes/NPPES_Deactivated_NPI_Report_121515.zip', oLocalFile), NAMED('Download')),
 			OUTPUT( BinUtils.checksum( oLocalFile ), NAMED('Checksum')),
 			OUTPUT( Zip.unzip(oLocalFile, mLocalPath, true), NAMED('Unzipping')),
 		);
