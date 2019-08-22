@@ -12,7 +12,9 @@ EXPORT Datasets := MODULE
 	EXPORT File_Raw_Daily := '~weather::raw::daily';
 	EXPORT File_Daily := '~weather::daily';
  EXPORT File_Single_Raw_Monthly(STRING pId) := '~weather::raw::monthly::' + pId;
+	EXPORT File_Single_Raw_Monthly_Fields(STRING pId) := '~weather::raw::monthly::fields::' + pId;
 	EXPORT File_Raw_Monthly := '~weather::raw::monthly';
+	EXPORT File_Raw_Monthly_Fields := '~weather::raw::monthly::fields';
 	EXPORT File_Single_Monthly(STRING pId) := '~weather::monthly::' + pId;
  EXPORT File_Monthly := '~weather::monthly';
  	
