@@ -108,7 +108,35 @@ EXPORT Extract := MODULE
 		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId) + 'new', OVERWRITE);
 	END;
 	*/
-	
+	EXPORT monthly_fields(STRING pId) := FUNCTION
+		layout := RECORD
+			STRING line;
+		END;
+		Cmd := 'head -n 1 ' +  BaseDataDirectory + pId + '.mly';
+		HeaderFields := PIPE(Cmd, Layouts.raw_monthly_layout, CSV);
+		Expander := PROJECT( HeaderFields, TRANSFORM( layout,
+			SELF.line :=
+				#DECLARE (Ndx)
+				#SET (Ndx, 1)
+				#LOOP
+					#IF (%Ndx% > 100)   //if we've iterated 9 times
+       #BREAK         // break out of the loop
+					#ELSE  
+						IF(#EXPAND('LEFT.field' + %Ndx%) != '', 'SELF.' + STD.Str.ToLowerCase(#EXPAND('LEFT.field' + %Ndx%)) + ' := LEFT.field' + %Ndx% + ';', '') +
+					#END
+					#SET (Ndx, %Ndx% + 1)
+				#END
+				'';
+				
+		));
+		RETURN SEQUENTIAL(
+			SFile.Create(Datasets.File_Raw_Monthly_Fields),
+			SFile.RemoveSub(Datasets.File_Raw_Monthly_Fields, Datasets.File_Single_Raw_Monthly_Fields(pId)),
+			OUTPUT(HeaderFields,, Datasets.File_Single_Raw_Monthly_Fields(pId), OVERWRITE),
+			OUTPUT(Expander),
+			SFile.AddSub(Datasets.File_Raw_Monthly_Fields, Datasets.File_Single_Raw_Monthly_Fields(pId))
+		);
+	END;
 	
  EXPORT monthly(STRING pId) := FUNCTION
 		File_In := BaseDataDirectory + pId + '.mly';
@@ -143,6 +171,7 @@ EXPORT Extract := MODULE
 				#BREAK
 			#END
 			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
+			Extract.monthly_fields( pStations[%oIndex%].id );
 			Extract.monthly( pStations[%oIndex%].id );
 			#SET (oIndex, %oIndex%+1)
 		#END
