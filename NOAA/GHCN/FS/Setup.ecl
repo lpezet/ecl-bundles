@@ -5,7 +5,6 @@ IMPORT NOAA.GHCN.FS.Layouts;
 IMPORT NOAA.Util.GeometryLite as Geometry;
 
 IMPORT LPezet.Linux.Curl;
-
 // WARNING
 // New file to look into
 // https://www.ncdc.noaa.gov/snow-and-ice/
@@ -143,8 +142,38 @@ EXPORT Setup := MODULE
 	EXPORT DownloadMonthly(DATASET(Layouts.station_id_layout) pStationIds) := FUNCTION
 		RETURN APPLY( pStationIds, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
 	END;
-	EXPORT LoadMonthly(pStationIds) := MACRO
+	EXPORT DownloadAndLoadMonthly(pStationIds) := MACRO
 		Extract.monthlies( pStationIds );
+	ENDMACRO;
+	EXPORT ETLMonthly(pStations) := MACRO
+		IMPORT LPezet.Linux.Curl;
+		IMPORT NOAA.GHCN.FS.Tranxform;
+		IMPORT NOAA.GHCN.FS.Extract;
+		IMPORT NOAA.GHCN.FS.Datasets;
+		IMPORT NOAA.Util.SFile;
+		LOADXML('<xml/>');
+		#DECLARE (oIndex)
+		#SET (oIndex, 1);
+		#UNIQUENAME(TotalRecords)
+		//%TotalRecords% := COUNT(pStations) : INDEPENDENT;
+		SEQUENTIAL(
+			//APPLY( pStations, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
+		#LOOP
+			#IF (%oIndex% > COUNT(pStations))
+				#BREAK
+			#END
+			// Download
+			OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + pStations[%oIndex%].id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + pStations[%oIndex%].id + '.mly'));
+			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
+			// EXPAND liner to help if station not-supported yet (using header from downloaded file)
+			Extract.monthly_fields( pStations[%oIndex%].id );
+			// Load data
+			Extract.monthly( pStations[%oIndex%].id );
+			// Transform data
+			Tranxform.monthly( pStations[%oIndex%].id );
+			#SET (oIndex, %oIndex%+1)
+		#END
+		);
 	ENDMACRO;
 	//EXPORT TransformMonthly( STRING pStationId ) := Tranxform.monthly( pStationId );
 	//EXPORT TransformMonthly(DATASET(Layouts.station_id_layout) pStationIds) := Tranxform.monthly();

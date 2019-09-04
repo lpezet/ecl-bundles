@@ -85,6 +85,15 @@ EXPORT Extract := MODULE
 		RETURN OUTPUT(DS_Dist,, Datasets.File_Single_Raw_Monthly(pId), OVERWRITE);
 	END;
 	/*
+	EXPORT gen_monthlies(DATASET(Layouts.station_id_layout) pStations) := FUNCTION
+		RETURN ORDERED(
+			NOTHOR(APPLY( pStations, 	SFile.RemoveSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly( id )) ));
+			APPLY( pStations, gen_monthly( id ) );
+			NOTHOR(APPLY( pStations, 	SFile.AddSub(Datasets.File_Raw_Monthly, Datasets.File_Single_Raw_Monthly( id )) ));
+		);
+	END;
+	*/
+	/*
 	SHARED gen_monthlies(pStations) := MACRO
 		#DECLARE (Ndx)
 		#SET (Ndx, 1);           
@@ -166,15 +175,21 @@ EXPORT Extract := MODULE
 		LOADXML('<xml/>');
 		#DECLARE (oIndex)
 		#SET (oIndex, 1);
+		#UNIQUENAME(TotalRecords)
+		//%TotalRecords% := COUNT(pStations) : INDEPENDENT;
+		SEQUENTIAL(
+			//APPLY( pStations, OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + id + '.mly')));
 		#LOOP
 			#IF (%oIndex% > COUNT(pStations))
 				#BREAK
 			#END
+			OUTPUT(Curl.download('https://www.ncei.noaa.gov/data/gsom/access/' + pStations[%oIndex%].id + '.csv', '/var/lib/HPCCSystems/mydropzone/' + pStations[%oIndex%].id + '.mly'));
 			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
 			Extract.monthly_fields( pStations[%oIndex%].id );
 			Extract.monthly( pStations[%oIndex%].id );
 			#SET (oIndex, %oIndex%+1)
 		#END
+		);
 	ENDMACRO;
 	
 	// DATASET(Layouts.station_id_layout) pStations
@@ -197,19 +212,22 @@ EXPORT Extract := MODULE
 	END;
 	
 	EXPORT monthliesOld2(pStations) := FUNCTIONMACRO
-		RETURN SEQUENTIAL(
 		LOADXML('<xml/>');
 		#DECLARE (oIndex)
 		#SET (oIndex, 1);
+		TotalRecords := COUNT(pStations) : INDEPENDENT;
+		Actions := SEQUENTIAL(
 		#LOOP
-			#IF (%oIndex% > COUNT(pStations))
+			#IF (%oIndex% > TotalRecords)
 				#BREAK
 			#END
 			//OUTPUT('Working on: ' + TOXML(pStations[%oIndex%]));
-			Extract.monthly( pStations[%oIndex%].id ),
+			Extract.monthly( pStations[%oIndex%].id );
 			#SET (oIndex, %oIndex%+1)
 		#END
 		);
+		
+		RETURN Actions;
 	ENDMACRO;
 	
 	
